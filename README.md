@@ -1,5 +1,5 @@
 # Lambdas
-Project showing examples of using Lambdas in Java 1.8
+Project showing examples of using Lambdas in Java 1.8 which is still not fully compatible with Android Studio
 
 Example of the Java 1.8 Cheat Sheet
 
