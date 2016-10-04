@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_lambdas" default="compile.module.lambdas">
+  <dirname property="module.lambdas.basedir" file="${ant.file.module_lambdas}"/>
+  
+  <property name="module.jdk.home.lambdas" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.lambdas" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.lambdas" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.lambdas" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="lambdas.output.dir" value="${module.lambdas.basedir}/out/production/Lambdas"/>
+  <property name="lambdas.testoutput.dir" value="${module.lambdas.basedir}/out/test/Lambdas"/>
+  
+  <path id="lambdas.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="lambdas.module.production.classpath">
+    <path refid="${module.jdk.classpath.lambdas}"/>
+  </path>
+  
+  <path id="lambdas.runtime.production.module.classpath">
+    <pathelement location="${lambdas.output.dir}"/>
+  </path>
+  
+  <path id="lambdas.module.classpath">
+    <path refid="${module.jdk.classpath.lambdas}"/>
+    <pathelement location="${lambdas.output.dir}"/>
+  </path>
+  
+  <path id="lambdas.runtime.module.classpath">
+    <pathelement location="${lambdas.testoutput.dir}"/>
+    <pathelement location="${lambdas.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.lambdas">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.lambdas">
+    <patternset refid="excluded.from.module.lambdas"/>
+  </patternset>
+  
+  <path id="lambdas.module.sourcepath">
+    <dirset dir="${module.lambdas.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.lambdas" depends="compile.module.lambdas.production,compile.module.lambdas.tests" description="Compile module Lambdas"/>
+  
+  <target name="compile.module.lambdas.production" depends="register.custom.compilers" description="Compile module Lambdas; production classes">
+    <mkdir dir="${lambdas.output.dir}"/>
+    <javac2 destdir="${lambdas.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.lambdas}/javac">
+      <compilerarg line="${compiler.args.lambdas}"/>
+      <bootclasspath refid="lambdas.module.bootclasspath"/>
+      <classpath refid="lambdas.module.production.classpath"/>
+      <src refid="lambdas.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.lambdas"/>
+    </javac2>
+    
+    <copy todir="${lambdas.output.dir}">
+      <fileset dir="${module.lambdas.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.lambdas.tests" depends="register.custom.compilers,compile.module.lambdas.production" description="compile module Lambdas; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.lambdas" description="cleanup module">
+    <delete dir="${lambdas.output.dir}"/>
+    <delete dir="${lambdas.testoutput.dir}"/>
+  </target>
+</project>
